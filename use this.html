@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Trail packing checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500;700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFE7D3;
+    --paper-card:#F8F3E6;
+    --ink:#2A2823;
+    --spruce:#2F4A3C;
+    --spruce-dark:#213631;
+    --rust:#A6521F;
+    --moss:#7C8468;
+    --gold:#B9862F;
+    --line:#D9CFB3;
+    --line-strong:#C2B491;
+  }
+  html[data-theme="dark"]{
+    --paper:#1B1E1C;
+    --paper-card:#242822;
+    --ink:#E9E4D6;
+    --spruce:#5FA085;
+    --spruce-dark:#3E6B58;
+    --rust:#E0925A;
+    --moss:#9AA48D;
+    --gold:#D9AE59;
+    --line:#33382F;
+    --line-strong:#454B3E;
+  }
+  html[data-theme="grey"]{
+    --paper:#EAEAE7;
+    --paper-card:#F6F6F4;
+    --ink:#28282A;
+    --spruce:#4B4E52;
+    --spruce-dark:#2F3134;
+    --rust:#8A6A4E;
+    --moss:#87888A;
+    --gold:#9A9590;
+    --line:#D5D5D1;
+    --line-strong:#C0C0BB;
+  }
+  html{ -webkit-tap-highlight-color: transparent; }
+  button, .check, .alt-toggle, .theme-btn, .filter-btn, .view-tab{ touch-action: manipulation; }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background: var(--paper);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px);
+    background-size: 100% 42px;
+    color: var(--ink);
+    font-family: 'Public Sans', 'Segoe UI', Arial, sans-serif;
+    padding: 28px 16px 70px;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-bottom: max(70px, calc(env(safe-area-inset-bottom) + 40px));
+    -webkit-text-size-adjust: 100%;
+  }
+  .wrap{max-width:740px;margin:0 auto;}
+  input, button, select, textarea{ font-size:16px; } /* prevents iOS auto-zoom on focus */
+
+  /* Header */
+  header{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:16px;
+    border-bottom: 3px solid var(--spruce);
+    padding-bottom: 4px;
+    margin-bottom: 18px;
+  }
+  .title-block .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color: var(--rust);
+    margin:0 0 6px;
+  }
+  h1{
+    font-family: 'Roboto Slab', Georgia, serif;
+    font-weight:700;
+    font-size: 30px;
+    margin: 0;
+    color: var(--spruce-dark);
+    letter-spacing: 0.2px;
+  }
+  .compass{
+    width:46px;height:46px;
+    flex-shrink:0;
+    opacity:0.85;
+    align-self:center;
+  }
+
+  /* View tabs: Personal Gear / Troop Gear */
+  .view-tabs{
+    display:flex;
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    overflow:hidden;
+    margin-bottom: 14px;
+    background: var(--paper-card);
+  }
+  .view-tab{
+    flex:1;
+    border:none;
+    background:transparent;
+    color: var(--moss);
+    font-family:'Roboto Slab', serif;
+    font-weight:600;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    padding:13px 8px;
+    cursor:pointer;
+  }
+  .view-tab + .view-tab{ border-left: 1px solid var(--line-strong); }
+  .view-tab.active{
+    background: var(--spruce);
+    color: var(--paper);
+  }
+
+  /* Toolbar - segmented row that lines up edge-to-edge with the elevation panel below */
+  .toolbar{
+    display:flex;
+    border: 1px solid var(--line-strong);
+    border-bottom:none;
+    border-radius: 6px 6px 0 0;
+    overflow:hidden;
+    background: var(--paper-card);
+  }
+  .toolbar .btn{
+    flex:1;
+    border:none;
+    border-radius:0;
+    justify-content:center;
+    padding:11px 8px;
+  }
+  .toolbar .btn + .btn{
+    border-left: 1px solid var(--line-strong);
+  }
+  .btn{
+    font-family:'Public Sans', sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    padding:7px 13px;
+    border-radius:3px;
+    border:1px solid var(--spruce);
+    background: var(--paper-card);
+    color: var(--spruce-dark);
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    letter-spacing:0.01em;
+  }
+  .btn:hover{filter:brightness(1.05);}
+  .btn.primary{
+    background: var(--spruce);
+    color: var(--paper);
+  }
+  .btn.ghost{
+    color: var(--moss);
+    background:transparent;
+  }
+  .btn.gear{
+    flex: 0 0 52px;
+    font-size:16px;
+  }
+
+  /* Hold-to-confirm reset button */
+  .hold-btn{
+    position:relative;
+    overflow:hidden;
+    -webkit-user-select:none;
+    user-select:none;
+    touch-action:none;
+  }
+  .hold-fill{
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:0%;
+    background: var(--spruce);
+    z-index:0;
+  }
+  .hold-label{
+    position:relative;
+    z-index:1;
+  }
+
+  /* Settings / Filter panels */
+  .settings-panel{
+    max-height:0;
+    overflow:hidden;
+    background: var(--paper-card);
+    border: 1px solid var(--line-strong);
+    border-top:none;
+    transition: max-height 0.25s ease;
+  }
+  .settings-panel.open{
+    max-height:400px;
+  }
+  .settings-inner{
+    padding: 16px 18px 18px;
+  }
+  .settings-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color: var(--moss);
+    margin-bottom:8px;
+  }
+  .settings-section + .settings-section{
+    margin-top:16px;
+    padding-top:16px;
+    border-top: 1px dashed var(--line-strong);
+  }
+  .theme-row, .settings-row{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .theme-btn, .filter-btn{
+    font-family:'Public Sans', sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    padding:8px 16px;
+    border-radius:4px;
+    border:1px solid var(--line-strong);
+    background: var(--paper);
+    color: var(--ink);
+    cursor:pointer;
+    flex:1;
+  }
+  .theme-btn.active, .filter-btn.active{
+    background: var(--spruce);
+    border-color: var(--spruce);
+    color: var(--paper);
+  }
+
+  /* Elevation progress */
+  .elevation-panel{
+    background: var(--paper-card);
+    border: 1px solid var(--line-strong);
+    border-radius: 0 0 6px 6px;
+    padding: 16px 18px 10px;
+    margin-top:0;
+    margin-bottom: 26px;
+  }
+  .elevation-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:10px;
+  }
+  .elevation-top .count{
+    font-family:'Roboto Slab', serif;
+    font-weight:700;
+    font-size:22px;
+    color: var(--spruce-dark);
+  }
+  .elevation-top .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color: var(--moss);
+  }
+  .elevation-svg-wrap{position:relative; width:100%; height:56px;}
+  .elevation-svg-wrap svg{width:100%; height:100%; display:block;}
+  .save-note{
+    text-align:right;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color: var(--moss);
+    height:16px;
+    margin-top:2px;
+  }
+
+  /* Sections */
+  .section{
+    margin-bottom: 22px;
+    background: var(--paper-card);
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    overflow:hidden;
+  }
+  .section-head{
+    background: var(--spruce);
+    color: var(--paper);
+    padding: 11px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .section-head .name{
+    font-family:'Roboto Slab', serif;
+    font-weight:500;
+    font-size: 15px;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+  }
+  .section-head .name::before{
+    content:"\25B2";
+    font-size:9px;
+    margin-right:8px;
+    color: var(--gold);
+    vertical-align:1px;
+  }
+  .section-head .count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    opacity:0.9;
+  }
+  .optional-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    color: var(--rust);
+    letter-spacing:0.1em;
+    padding: 12px 16px 0;
+    font-weight:500;
+  }
+
+  /* Item rows */
+  .item{
+    display:flex;
+    gap: 12px;
+    align-items:flex-start;
+    padding: 13px 16px;
+    border-top: 1px dashed var(--line-strong);
+  }
+  .item:first-of-type{border-top:none;}
+  .item.checked{background: rgba(47,74,60,0.07);}
+
+  .check{
+    flex-shrink:0;
+    position:relative;
+    width:30px;height:30px;
+    margin-top:-2px;
+    margin-left:-4px;
+    cursor:pointer;
+    display:block;
+  }
+  .check input{
+    position:absolute;
+    opacity:0;
+    width:100%;height:100%;
+    margin:0;
+    cursor:pointer;
+  }
+  .check .box{
+    position:absolute;
+    inset:4px;
+    border: 2px solid var(--spruce);
+    border-radius: 4px;
+    background: var(--paper);
+  }
+  .check .box::after{
+    content:"";
+    position:absolute;
+    left:6px; top:2px;
+    width:6px; height:11px;
+    border-right: 2px solid var(--paper);
+    border-bottom: 2px solid var(--paper);
+    transform: rotate(40deg);
+    opacity:0;
+  }
+  .check input:checked ~ .box{
+    background: var(--spruce);
+  }
+  .check input:checked ~ .box::after{
+    opacity:1;
+  }
+  .check input:focus-visible ~ .box{
+    outline: 2px solid var(--gold);
+    outline-offset:1px;
+  }
+
+  .item-main{min-width:0; flex:1;}
+  .item-name-row{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
+  .item-name{
+    font-weight:600;
+    font-size:15px;
+    color: var(--ink);
+  }
+  .item-name.checked{
+    text-decoration: line-through;
+    color: var(--moss);
+  }
+  .qty-pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    font-weight:500;
+    color: var(--rust);
+    border: 1px solid var(--rust);
+    border-radius: 3px;
+    padding:1px 6px;
+    white-space:nowrap;
+  }
+  .item-comment{
+    font-size:13px;
+    color:#57543F;
+    margin-top:4px;
+    line-height:1.5;
+  }
+  .alt-toggle{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color: var(--spruce);
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:6px 0;
+    margin:4px -2px -6px;
+    text-decoration: underline;
+    text-underline-offset:2px;
+    display:inline-block;
+    min-height:32px;
+  }
+  .alt-box{
+    display:none;
+    margin-top:8px;
+  }
+  .alt-box.open{display:block;}
+  .alt-box input{
+    width:100%;
+    max-width:280px;
+    font-family:'Public Sans', sans-serif;
+    font-size:16px;
+    padding:9px 10px;
+    border:1px solid var(--line-strong);
+    border-radius:4px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .alt-box input:focus{
+    outline:none;
+    border-color: var(--spruce);
+  }
+  .alt-box input::placeholder{color:#a9a390;}
+
+  .notice{
+    background: #F4E7D6;
+    border: 1px solid var(--gold);
+    border-left: 4px solid var(--rust);
+    border-radius: 4px;
+    padding: 13px 16px;
+    font-size: 13px;
+    margin: 26px 0 6px;
+    color: #5B3814;
+    line-height:1.6;
+  }
+  .notice strong{
+    display:block;
+    margin-bottom:5px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+
+  .add-item-panel{
+    padding:16px;
+    border-top:1px dashed var(--line-strong);
+  }
+  .add-item-grid{
+    display:grid;
+    grid-template-columns: 2fr 1fr;
+    gap:8px;
+    margin-bottom:8px;
+  }
+  .add-item-panel input, .add-item-panel textarea{
+    width:100%;
+    font-family:'Public Sans', sans-serif;
+    font-size:16px;
+    padding:9px 10px;
+    border:1px solid var(--line-strong);
+    border-radius:4px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .add-item-panel textarea{
+    margin-bottom:10px;
+    resize:vertical;
+    font-family:'Public Sans', sans-serif;
+  }
+  .add-item-panel input::placeholder, .add-item-panel textarea::placeholder{color:#a9a390;}
+  .remove-btn{
+    background:none;
+    border:none;
+    color: var(--rust);
+    font-size:20px;
+    line-height:1;
+    cursor:pointer;
+    padding:6px 4px;
+    flex-shrink:0;
+    align-self:flex-start;
+  }
+  #customItemsList:empty, #troopCustomItemsList:empty{ display:none; }
+
+  @media (max-width:480px){
+    body{padding-left:12px; padding-right:12px; padding-top:20px;}
+    header{padding-bottom:12px; margin-bottom:14px;}
+    h1{font-size:22px;}
+    .title-block .kicker{font-size:10px;}
+    .compass{width:34px;height:34px;}
+    .view-tab{padding:12px 4px; font-size:11.5px;}
+    .toolbar .btn{padding:13px 4px; font-size:11.5px;}
+    .hold-label{font-size:11.5px;}
+    .btn.gear{flex-basis:44px; font-size:15px;}
+    .elevation-panel{padding:14px 14px 8px;}
+    .elevation-top .count{font-size:19px;}
+    .section-head{padding:12px 14px;}
+    .section-head .name{font-size:13.5px;}
+    .item{padding:14px 14px; gap:10px;}
+    .item-name{font-size:14.5px;}
+    .item-comment{font-size:12.5px;}
+    .qty-pill{font-size:10px;}
+    .settings-inner{padding:14px;}
+    .theme-row, .settings-row{gap:8px;}
+    .theme-btn, .filter-btn{padding:11px 8px; text-align:center;}
+    .settings-row .btn{flex:1; min-width:0; padding:11px 6px;}
+    .add-item-panel{padding:14px;}
+    .add-item-grid{grid-template-columns: 1fr;}
+    .notice{font-size:12.5px; padding:12px 14px;}
+  }
+
+  @media (hover:none){
+    .btn:hover, .theme-btn:hover, .filter-btn:hover{ filter:none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-block">
+      <p class="kicker">Backcountry trek &middot; gear list</p>
+      <h1>Trail packing checklist</h1>
+    </div>
+    <svg class="compass" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="21" stroke="#2F4A3C" stroke-width="2"/>
+      <path d="M24 10 L28 24 L24 38 L20 24 Z" fill="#A6521F"/>
+      <circle cx="24" cy="24" r="2.5" fill="#2F4A3C"/>
+    </svg>
+  </header>
+
+  <div class="view-tabs">
+    <button class="view-tab active" id="tabPersonal" data-view="personal" type="button">Personal gear</button>
+    <button class="view-tab" id="tabTroop" data-view="troop" type="button">Troop gear</button>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn primary" id="saveBtn">Save all</button>
+    <button class="btn ghost hold-btn" id="resetBtn" type="button">
+      <span class="hold-fill" id="resetFill"></span>
+      <span class="hold-label">Hold to reset</span>
+    </button>
+    <button class="btn ghost gear" id="filterToggle" type="button" title="Filter" aria-label="Filter">&#9660;</button>
+    <button class="btn ghost gear" id="settingsToggle" type="button" title="Settings" aria-label="Settings">&#9881;</button>
+  </div>
+
+  <div class="settings-panel" id="filterPanel">
+    <div class="settings-inner">
+      <div class="settings-label">Show</div>
+      <div class="theme-row">
+        <button class="filter-btn active" data-filter-choice="all" type="button">All</button>
+        <button class="filter-btn" data-filter-choice="checked" type="button">Checked</button>
+        <button class="filter-btn" data-filter-choice="unchecked" type="button">Unchecked</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-inner">
+      <div class="settings-section">
+        <div class="settings-label">Appearance</div>
+        <div class="theme-row">
+          <button class="theme-btn" data-theme-choice="light" type="button">Light</button>
+          <button class="theme-btn" data-theme-choice="dark" type="button">Dark</button>
+          <button class="theme-btn" data-theme-choice="grey" type="button">Grey</button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label">Backup</div>
+        <div class="settings-row">
+          <button class="btn ghost" id="exportBtn" style="border:1px solid var(--line-strong);" type="button">Export backup</button>
+          <button class="btn ghost" id="importBtn" style="border:1px solid var(--line-strong);" type="button">Import backup</button>
+          <input type="file" id="importFile" accept="application/json" style="display:none;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="elevation-panel">
+    <div class="elevation-top">
+      <span class="count" id="progressNum">0 / 0 packed</span>
+      <span class="tag" id="progressTag">Personal pack progress</span>
+    </div>
+    <div class="elevation-svg-wrap">
+      <svg viewBox="0 0 300 56" preserveAspectRatio="none">
+        <defs>
+          <clipPath id="progressClip">
+            <rect id="progressClipRect" x="0" y="0" width="0" height="56"/>
+          </clipPath>
+        </defs>
+        <path d="M0,50 L20,32 L38,40 L58,14 L78,26 L98,6 L120,22 L142,12 L164,34 L186,10 L208,28 L230,16 L252,36 L274,20 L300,30 L300,56 L0,56 Z" fill="var(--line-strong)"/>
+        <g clip-path="url(#progressClip)">
+          <path d="M0,50 L20,32 L38,40 L58,14 L78,26 L98,6 L120,22 L142,12 L164,34 L186,10 L208,28 L230,16 L252,36 L274,20 L300,30 L300,56 L0,56 Z" fill="var(--spruce)"/>
+        </g>
+        <circle id="progressMarker" cx="6.5" cy="50" r="5" fill="var(--rust)" stroke="var(--paper-card)" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="save-note" id="saveNote">&nbsp;</div>
+  </div>
+
+  <div id="personalView">
+    <div id="personalSections"></div>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="name">Custom equipment</span>
+        <span class="count" id="count-custom"></span>
+      </div>
+      <div id="customItemsList"></div>
+      <div class="add-item-panel">
+        <div class="add-item-grid">
+          <input type="text" id="newItemName" placeholder="Item name" maxlength="60">
+          <input type="text" id="newItemQty" placeholder="Qty (optional)" maxlength="20">
+        </div>
+        <textarea id="newItemComment" placeholder="Notes (optional)" rows="2"></textarea>
+        <button class="btn primary" id="addItemBtn" type="button" style="width:100%;">+ Add personal item</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="troopView" style="display:none;">
+    <div id="troopSections"></div>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="name">Custom troop equipment</span>
+        <span class="count" id="count-troop-custom"></span>
+      </div>
+      <div id="troopCustomItemsList"></div>
+      <div class="add-item-panel">
+        <div class="add-item-grid">
+          <input type="text" id="newTroopItemName" placeholder="Item name" maxlength="60">
+          <input type="text" id="newTroopItemQty" placeholder="Qty (optional)" maxlength="20">
+        </div>
+        <textarea id="newTroopItemComment" placeholder="Notes (optional)" rows="2"></textarea>
+        <button class="btn primary" id="addTroopItemBtn" type="button" style="width:100%;">+ Add troop item</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="notice">
+    <strong>Not allowed on this trek</strong>
+    Deodorant, radios / bluetooth speakers / video game devices, hammocks, turkey bags, bear bag pulley systems, bear spray, bear horns, drones, fireworks, drugs and alcohol.
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {
+    name: "Backpacking gear",
+    items: [
+      {n:"Backpack", q:"1", c:"Large enough for personal gear plus your share of crew gear. 65–75L recommended."},
+      {n:"Pack cover", q:"1", c:"Waterproof, durable, fits over full pack."},
+      {n:"Sleeping bag", q:"1", c:"Comfort rating of 20°F and under 5 lbs recommended."},
+      {n:"Waterproof stuff sack", q:"1", c:"For sleeping bag. Or use a compression sack lined with a plastic bag."},
+      {n:"Sleeping pad", q:"1", c:"Padding and insulation from the ground."},
+      {n:"Headlamp or flashlight", q:"1", c:"Durable and lightweight. Bring extra batteries."},
+    ],
+    optional: [
+      {n:"Trekking poles", q:"", c:"Use rubber tips to prevent soil erosion."},
+      {n:"Sleeping bag liner", q:"1", c:""},
+      {n:"Pillow", q:"", c:"Small, packable."},
+    ]
+  },
+  {
+    name: "Food and water",
+    items: [
+      {n:"Bowl", q:"1", c:"Deep bowl of lightweight material."},
+      {n:"Utensils", q:"1", c:"Only a spoon or spork is recommended."},
+      {n:"Water bottles & reservoir", q:"4+ L", c:"At least 4L personal capacity, any combo of bottle or reservoir."},
+      {n:"Extra water capacity", q:"2", c:"Collapsible bottles for dry camps, 2L recommended."},
+      {n:"Mug / cup", q:"1", c:"12–20 oz, measuring style recommended."},
+    ]
+  },
+  {
+    name: "Clothing and footwear",
+    items: [
+      {n:"Underwear", q:"3–6 pr", c:"Moisture-wicking."},
+      {n:"T-shirt", q:"2", c:"Moisture-wicking, avoid cotton."},
+      {n:"Long sleeve shirt", q:"1", c:"Moisture-wicking, avoid cotton."},
+      {n:"Pants / shorts", q:"2", c:"Quick drying. Pants needed for certain programs including conservation."},
+      {n:"Boots", q:"1 pr", c:"Sturdy, supportive, broken in. Trail runners accepted, ankle-supporting boots highly recommended."},
+      {n:"Socks", q:"3–4 pr", c:"Wool or synthetic, not cotton. Liners optional."},
+      {n:"Camp / stream shoes", q:"1 pr", c:"Used in camp, stream crossings, some backcountry programs."},
+      {n:"Sleep clothes", q:"1 set", c:"Only worn in sleeping bag. Lightweight t-shirt and gym shorts recommended."},
+    ],
+    optional: [
+      {n:"Long underwear", q:"1", c:"Mid-weight synthetic top and/or bottoms, for cold mornings or nights."},
+    ]
+  },
+  {
+    name: "Rain and cold weather",
+    items: [
+      {n:"Rain jacket", q:"1", c:"Durable rain gear highly recommended."},
+      {n:"Rain pants", q:"1", c:"Vital for warmth in heavy rain."},
+      {n:"Lightweight fleece", q:"1", c:"Lightest and warmest available. Wool sweater or fleece pullover."},
+      {n:"Gloves", q:"1 pr", c:"Recommended for cold / summit days."},
+      {n:"Warm hat", q:"1", c:"For sleeping and cold / summit days."},
+      {n:"Insulated jacket", q:"1", c:"Packable down, synthetic puffy, or fleece. Expect lows in 30s at elevation."},
+    ]
+  },
+  {
+    name: "Health and hygiene",
+    items: [
+      {n:"Toothbrush and toothpaste", q:"1", c:"Larger tubes may be considered crew gear."},
+      {n:"Prescription medications", q:"", c:"In-date, enough for entire trek."},
+      {n:"Camp towel", q:"1", c:"Small, quick drying."},
+    ],
+    optional: [
+      {n:"Contacts / extra solution", q:"", c:"Multiple pairs if needed, enough solution for entire trek. Bring glasses as backup."},
+      {n:"Foot powder", q:"", c:"Soothes tired feet, absorbs moisture, reduces blisters."},
+    ]
+  },
+  {
+    name: "Sun protection",
+    items: [
+      {n:"Hat", q:"1", c:"Wide brim or baseball, protects ears and face."},
+      {n:"Sunglasses", q:"1", c:"Protect eyes and reduce eye strain."},
+      {n:"Lip balm", q:"1", c:"Moisturizing, SPF 25 or more."},
+    ]
+  },
+  {
+    name: "Miscellaneous",
+    items: [
+      {n:"Ditty bags / resealable bags", q:"6–10", c:"For packing, keeping clothes dry, laundry, pack organization."},
+      {n:"Whistle", q:"1", c:"For emergency use / signaling."},
+    ],
+    optional: [
+      {n:"Daypack", q:"1", c:"For summit days and side hikes."},
+      {n:"Bandana / tubular headgear", q:"2", c:"Washcloth, hot pot holder, and other uses."},
+      {n:"Lashing straps", q:"2", c:"Hold sleeping bag and gear on pack."},
+      {n:"Pocketknife", q:"", c:"A few per crew is sufficient."},
+      {n:"Money", q:"$20–50", c:"Small bills. Backcountry trading posts have items.", noAlt:true},
+      {n:"Watch", q:"1", c:"Several per crew is sufficient."},
+    ]
+  },
+  {
+    name: "Extras & entertainment",
+    items: [
+      {n:"Camera", q:"1", c:"Batteries and memory card."},
+      {n:"Fishing equipment", q:"1", c:"Some itineraries have fishing. Obtain a NM state fishing license."},
+      {n:"Postcards", q:"1+", c:"Pre-stamped. Mailing available on trek."},
+      {n:"Notepad & pen", q:"1", c:"For journals or emergency messages."},
+      {n:"Cards or games", q:"", c:"For entertainment."},
+      {n:"Camp chair", q:"", c:"Helpful for a backrest and/or elevating your feet."},
+    ]
+  },
+];
+
+const DATA_TROOP = [
+  {
+    name: "Crew-provided equipment",
+    items: [
+      {n:"Sewing kit", q:"1", c:"Heavy thread & needle to repair pack, tents, clothing."},
+      {n:"Tent stakes", q:"5/person", c:"Philmont tents need 8, dining fly needs 8."},
+      {n:"Backpacking stove", q:"2", c:"White gas or isobutane. Needs a wide, low base."},
+      {n:"Stove fuel", q:"2", c:"2x 20oz white gas bottles, or 3x 8oz isobutane canisters recommended."},
+      {n:"First aid kit", q:"1", c:"Sufficient for crew and easily accessible."},
+      {n:"Duct tape", q:"1", c:"Small amount needed for trail repairs."},
+      {n:"Waterproof ground cloth", q:"1/tent", c:"5' x 7' is suitable for Philmont tents."},
+      {n:"Nylon cord", q:"3", c:"50' x 1/8\" for dining fly, clothesline, repairing items, or tying items to pack."},
+      {n:"Sunscreen", q:"2–3", c:"6 oz tubes with SPF 25 or higher. No aerosol spray cans."},
+      {n:"Insect repellent", q:"2", c:"Small bottles, no aerosol spray cans."},
+      {n:"Multi-tool", q:"2", c:"To remove lid from cooking pot and repair gear."},
+      {n:"Trowel / shovel", q:"1", c:"Useful if away from a camp or camping in a low impact campsite."},
+      {n:"Carabiner", q:"1", c:"Locking preferred, must be rated as climbing strength for rigging the 'oops' bag with bear bags. A key-ring carabiner is not sufficient."},
+      {n:"Matches / lighter", q:"4", c:"Pack in a waterproof container. A few per crew is sufficient."},
+      {n:"Compass", q:"2", c:"Liquid filled with rotating dial. A few per crew is sufficient."},
+      {n:"Philmont sectional maps", q:"2 sets", c:"Overall maps are not designed for navigation. Map depends on selected itinerary."},
+    ],
+    optional: [
+      {n:"Water purifiers / filters", q:"2–3", c:"All water from streams, lakes, wells, etc needs to be purified. Micropur tablets are issued so filters are optional and will require a repair kit on the trail."},
+      {n:"Spices / hot sauce", q:"", c:"Personal preference to compliment cooked foods. May be shared."},
+    ]
+  },
+  {
+    name: "Equipment issued by Philmont",
+    items: [
+      {n:"Philmont tent w/ poles", q:"1 per 2 ppl", c:"Crews should plan on using the minimum number of backpacking tents. Weight is 5 lbs 4 oz. Footprint is 88\" x 54\". Personal tents must be fully enclosed.", noAlt:true},
+      {n:"Crew shelter", q:"1", c:"Dining fly, 12' x 10', 2 lbs 8 oz."},
+      {n:"Cooking pot", q:"1", c:"8-qt aluminum pot with lid, 1 lb 5.8 oz. Must be large enough to cook for everyone in the crew."},
+      {n:"Dishwashing / 2nd cooking pot", q:"1", c:"8-qt aluminum pot without lid, 1 lb 4 oz. Must be large enough to sanitize dishes by submerging in boiling water."},
+      {n:"Large spoon", q:"1", c:"1 lg spoon, 2.6 oz."},
+      {n:"Plastic trash bags", q:"10", c:"Personal preference, multi-purpose."},
+      {n:"Dishwashing soap, hand sanitizer, scrub pads", q:"", c:""},
+      {n:"Water purifier tablets", q:"", c:"Micropur — 1 tablet treats 1 liter. Resupply at backcountry commissaries."},
+      {n:"Bear rope", q:"2 (3 for LIC)", c:"Nylon, 1 lb 1 oz. Philmont requires Philmont's or equivalent dimension rope, 100' long, 1/4\" diameter."},
+      {n:"Bear bags", q:"5–8", c:"For hanging smellables, 3.0 oz each."},
+      {n:"Food strainer and scraper", q:"1 ea", c:"8 oz."},
+      {n:"Toilet paper", q:"", c:"Resupplied with food pickup."},
+      {n:"Collapsible poles", q:"2", c:"For dining fly (1 lb 6 oz). Trekking poles can also be used."},
+      {n:"Hot pot tongs", q:"1", c:"3.5 oz. Multi-tool can be used instead."},
+    ]
+  },
+];
+
+const state = {};
+let idCounter = 0;
+const personalCustomItems = [];
+const troopCustomItems = [];
+let customIdCounter = 0;
+let activeView = 'personal';
+let currentFilter = 'all';
+
+function buildItem(item, onRemove){
+  const id = item._id || ('i' + (idCounter++));
+  item._id = id;
+  if(!state[id]) state[id] = {checked:false, alt:''};
+
+  const row = document.createElement('div');
+  row.className = 'item';
+  row.id = 'row-' + id;
+
+  const checkWrap = document.createElement('label');
+  checkWrap.className = 'check';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.id = 'cb-' + id;
+  const box = document.createElement('span');
+  box.className = 'box';
+  checkWrap.appendChild(cb);
+  checkWrap.appendChild(box);
+
+  const main = document.createElement('div');
+  main.className = 'item-main';
+
+  const nameRow = document.createElement('div');
+  nameRow.className = 'item-name-row';
+  const nameEl = document.createElement('span');
+  nameEl.className = 'item-name';
+  nameEl.textContent = item.n;
+  nameRow.appendChild(nameEl);
+  if(item.q){
+    const pill = document.createElement('span');
+    pill.className = 'qty-pill';
+    pill.textContent = item.q;
+    nameRow.appendChild(pill);
+  }
+  main.appendChild(nameRow);
+
+  if(item.c){
+    const cm = document.createElement('div');
+    cm.className = 'item-comment';
+    cm.textContent = item.c;
+    main.appendChild(cm);
+  }
+
+  cb.addEventListener('change', () => {
+    state[id].checked = cb.checked;
+    row.classList.toggle('checked', cb.checked);
+    nameEl.classList.toggle('checked', cb.checked);
+    saveState();
+    updateProgress();
+  });
+
+  if(!item.noAlt){
+    const toggle = document.createElement('button');
+    toggle.className = 'alt-toggle';
+    toggle.type = 'button';
+    toggle.textContent = '+ add alternative';
+
+    const altBox = document.createElement('div');
+    altBox.className = 'alt-box';
+    const altInput = document.createElement('input');
+    altInput.type = 'text';
+    altInput.placeholder = "What are you bringing instead?";
+    altInput.addEventListener('input', () => {
+      state[id].alt = altInput.value;
+      saveState();
+    });
+    altBox.appendChild(altInput);
+
+    toggle.addEventListener('click', () => {
+      const open = altBox.classList.toggle('open');
+      toggle.textContent = open ? '- hide alternative' : '+ add alternative';
+      if(open) altInput.focus();
+    });
+
+    main.appendChild(toggle);
+    main.appendChild(altBox);
+
+    item._altInput = altInput;
+    item._altBox = altBox;
+    item._altToggle = toggle;
+  }
+
+  row.appendChild(checkWrap);
+  row.appendChild(main);
+
+  if(onRemove){
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-btn';
+    removeBtn.type = 'button';
+    removeBtn.setAttribute('aria-label', 'Remove item');
+    removeBtn.innerHTML = '&times;';
+    removeBtn.addEventListener('click', () => onRemove(item, row));
+    row.appendChild(removeBtn);
+  }
+
+  item._checkbox = cb;
+  item._row = row;
+  item._nameEl = nameEl;
+
+  return row;
+}
+
+function renderSections(dataArr, containerEl, prefix){
+  dataArr.forEach((section, sIdx) => {
+    const sec = document.createElement('div');
+    sec.className = 'section';
+
+    const head = document.createElement('div');
+    head.className = 'section-head';
+    head.innerHTML = `<span class="name">${section.name}</span><span class="count" id="count-${prefix}-${sIdx}"></span>`;
+    sec.appendChild(head);
+
+    section.items.forEach(item => sec.appendChild(buildItem(item)));
+
+    if(section.optional && section.optional.length){
+      const lbl = document.createElement('div');
+      lbl.className = 'optional-label';
+      lbl.textContent = 'Optional';
+      sec.appendChild(lbl);
+      section.optional.forEach(item => sec.appendChild(buildItem(item)));
+    }
+
+    containerEl.appendChild(sec);
+  });
+}
+
+const personalSectionsEl = document.getElementById('personalSections');
+const troopSectionsEl = document.getElementById('troopSections');
+renderSections(DATA, personalSectionsEl, 'p');
+renderSections(DATA_TROOP, troopSectionsEl, 't');
+
+function flatten(dataArr){
+  const out = [];
+  dataArr.forEach(s => {
+    s.items.forEach(i => out.push(i));
+    if(s.optional) s.optional.forEach(i => out.push(i));
+  });
+  return out;
+}
+
+function allItems(){
+  return [...flatten(DATA), ...flatten(DATA_TROOP), ...personalCustomItems, ...troopCustomItems];
+}
+
+function viewItems(view){
+  if(view === 'troop') return [...flatten(DATA_TROOP), ...troopCustomItems];
+  return [...flatten(DATA), ...personalCustomItems];
+}
+
+/* Elevation progress marker: its x is clamped so it never clips through the
+   left/right walls, and the fill boundary uses that same x so the dot's
+   center always sits right where the green fill meets the ridge line. */
+const clipRect = document.getElementById('progressClipRect');
+const marker = document.getElementById('progressMarker');
+const RIDGE_POINTS = [
+  [0,50],[20,32],[38,40],[58,14],[78,26],[98,6],[120,22],[142,12],
+  [164,34],[186,10],[208,28],[230,16],[252,36],[274,20],[300,30]
+];
+const MARKER_R = 6.5;
+
+function ridgeYAt(x){
+  for(let i = 0; i < RIDGE_POINTS.length - 1; i++){
+    const [x1,y1] = RIDGE_POINTS[i];
+    const [x2,y2] = RIDGE_POINTS[i+1];
+    if(x >= x1 && x <= x2){
+      const t = (x2 === x1) ? 0 : (x - x1) / (x2 - x1);
+      return y1 + (y2 - y1) * t;
+    }
+  }
+  return RIDGE_POINTS[RIDGE_POINTS.length - 1][1];
+}
+
+function updateSectionCounts(dataArr, prefix){
+  dataArr.forEach((s, idx) => {
+    const its = [...s.items, ...(s.optional||[])];
+    const c = its.filter(i => state[i._id] && state[i._id].checked).length;
+    const t = its.length;
+    const el = document.getElementById(`count-${prefix}-${idx}`);
+    if(el) el.textContent = `${c}/${t}`;
+  });
+}
+
+function updateCustomCount(elId, list){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  const cc = list.filter(i => state[i._id] && state[i._id].checked).length;
+  el.textContent = list.length ? `${cc}/${list.length}` : '';
+}
+
+function updateProgress(){
+  const items = viewItems(activeView);
+  const total = items.length;
+  const checked = items.filter(i => state[i._id] && state[i._id].checked).length;
+  const pct = total ? checked/total : 0;
+
+  document.getElementById('progressNum').textContent = `${checked} / ${total} packed`;
+  document.getElementById('progressTag').textContent = activeView === 'troop' ? 'Troop pack progress' : 'Personal pack progress';
+
+  const markerX = MARKER_R + pct * (300 - MARKER_R * 2);
+  clipRect.setAttribute('width', markerX.toFixed(1));
+  const ridgeY = ridgeYAt(markerX);
+  const markerY = Math.max(ridgeY, MARKER_R + 1);
+  marker.setAttribute('cx', markerX.toFixed(1));
+  marker.setAttribute('cy', markerY.toFixed(1));
+
+  updateSectionCounts(DATA, 'p');
+  updateSectionCounts(DATA_TROOP, 't');
+  updateCustomCount('count-custom', personalCustomItems);
+  updateCustomCount('count-troop-custom', troopCustomItems);
+
+  applyFilter();
+}
+
+/* Filter: All / Checked / Unchecked, applied to whichever tab is active */
+function matchesFilter(id){
+  if(currentFilter === 'all') return true;
+  const checked = !!(state[id] && state[id].checked);
+  return currentFilter === 'checked' ? checked : !checked;
+}
+
+function applyFilterToContainer(containerEl){
+  containerEl.querySelectorAll('.section').forEach(sec => {
+    let anyVisible = false;
+    sec.querySelectorAll('.item').forEach(rowEl => {
+      const id = rowEl.id.replace('row-','');
+      const match = matchesFilter(id);
+      rowEl.style.display = match ? '' : 'none';
+      if(match) anyVisible = true;
+    });
+    sec.style.display = anyVisible ? '' : 'none';
+  });
+}
+
+function applyFilterToList(listEl){
+  listEl.querySelectorAll('.item').forEach(rowEl => {
+    const id = rowEl.id.replace('row-','');
+    rowEl.style.display = matchesFilter(id) ? '' : 'none';
+  });
+}
+
+function applyFilter(){
+  if(activeView === 'troop'){
+    applyFilterToContainer(troopSectionsEl);
+    applyFilterToList(document.getElementById('troopCustomItemsList'));
+  }else{
+    applyFilterToContainer(personalSectionsEl);
+    applyFilterToList(document.getElementById('customItemsList'));
+  }
+}
+
+const filterButtons = document.querySelectorAll('.filter-btn');
+filterButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentFilter = btn.dataset.filterChoice;
+    filterButtons.forEach(b => b.classList.toggle('active', b === btn));
+    applyFilter();
+  });
+});
+
+/* View tabs */
+const viewTabs = document.querySelectorAll('.view-tab');
+const personalViewEl = document.getElementById('personalView');
+const troopViewEl = document.getElementById('troopView');
+
+function setView(view){
+  activeView = view;
+  viewTabs.forEach(t => t.classList.toggle('active', t.dataset.view === view));
+  personalViewEl.style.display = view === 'personal' ? '' : 'none';
+  troopViewEl.style.display = view === 'troop' ? '' : 'none';
+  updateProgress();
+}
+
+viewTabs.forEach(t => t.addEventListener('click', () => setView(t.dataset.view)));
+
+const STORAGE_KEY = 'philmont-packing-checklist-v1';
+const hasCloudStorage = (typeof window.storage !== 'undefined' && window.storage && typeof window.storage.set === 'function');
+
+async function saveState(){
+  const noteEl = document.getElementById('saveNote');
+  try{
+    if(hasCloudStorage){
+      await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+    }else{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    noteEl.textContent = 'Saved';
+    clearTimeout(saveState._t);
+    saveState._t = setTimeout(() => { noteEl.textContent = ''; }, 1200);
+  }catch(e){
+    noteEl.textContent = "Couldn't save — changes may not persist.";
+  }
+}
+
+async function loadState(){
+  try{
+    let raw = null;
+    if(hasCloudStorage){
+      const result = await window.storage.get(STORAGE_KEY, false);
+      raw = result ? result.value : null;
+    }else{
+      raw = localStorage.getItem(STORAGE_KEY);
+    }
+    if(raw){
+      const saved = JSON.parse(raw);
+      allItems().forEach(item => {
+        const s = saved[item._id];
+        if(s){
+          state[item._id] = s;
+          item._checkbox.checked = !!s.checked;
+          item._row.classList.toggle('checked', !!s.checked);
+          item._nameEl.classList.toggle('checked', !!s.checked);
+          if(item._altInput && s.alt){
+            item._altInput.value = s.alt;
+            item._altBox.classList.add('open');
+            item._altToggle.textContent = '- hide alternative';
+          }
+        }
+      });
+    }
+  }catch(e){
+  }
+  updateProgress();
+}
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'packing-checklist-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('importBtn').addEventListener('click', () => {
+  document.getElementById('importFile').click();
+});
+
+document.getElementById('importFile').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async (evt) => {
+    try{
+      const saved = JSON.parse(evt.target.result);
+      allItems().forEach(item => {
+        const s = saved[item._id];
+        if(s){
+          state[item._id] = s;
+          item._checkbox.checked = !!s.checked;
+          item._row.classList.toggle('checked', !!s.checked);
+          item._nameEl.classList.toggle('checked', !!s.checked);
+          if(item._altInput){
+            item._altInput.value = s.alt || '';
+            if(s.alt){
+              item._altBox.classList.add('open');
+              item._altToggle.textContent = '- hide alternative';
+            }
+          }
+        }
+      });
+      updateProgress();
+      await saveState();
+      const noteEl = document.getElementById('saveNote');
+      noteEl.textContent = 'Backup imported';
+      setTimeout(() => { noteEl.textContent = ''; }, 1800);
+    }catch(err){
+      alert("Couldn't read that backup file.");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+document.getElementById('saveBtn').addEventListener('click', async () => {
+  const noteEl = document.getElementById('saveNote');
+  await saveState();
+  noteEl.textContent = 'All progress saved';
+  clearTimeout(saveState._t);
+  saveState._t = setTimeout(() => { noteEl.textContent = ''; }, 1800);
+});
+
+/* Hold-to-confirm reset: hold for 1.5 seconds while a green bar fills the button */
+const resetBtn = document.getElementById('resetBtn');
+const resetFill = document.getElementById('resetFill');
+const HOLD_MS = 1500;
+let holdRAF = null;
+let holdStart = null;
+
+function doReset(){
+  viewItems(activeView).forEach(item => {
+    state[item._id].checked = false;
+    item._checkbox.checked = false;
+    item._row.classList.remove('checked');
+    item._nameEl.classList.remove('checked');
+  });
+  updateProgress();
+  saveState();
+}
+
+function holdStep(now){
+  const elapsed = now - holdStart;
+  const pct = Math.min(elapsed / HOLD_MS, 1);
+  resetFill.style.width = (pct * 100) + '%';
+  if(pct >= 1){
+    doReset();
+    endHold();
+  }else{
+    holdRAF = requestAnimationFrame(holdStep);
+  }
+}
+
+function startHold(e){
+  e.preventDefault();
+  if(holdRAF) return;
+  holdStart = performance.now();
+  resetFill.style.transition = 'none';
+  holdRAF = requestAnimationFrame(holdStep);
+}
+
+function endHold(){
+  if(holdRAF) cancelAnimationFrame(holdRAF);
+  holdRAF = null;
+  resetFill.style.transition = 'width 0.2s ease';
+  resetFill.style.width = '0%';
+}
+
+resetBtn.addEventListener('mousedown', startHold);
+resetBtn.addEventListener('touchstart', startHold, {passive:false});
+['mouseup','mouseleave','touchend','touchcancel'].forEach(evt => {
+  resetBtn.addEventListener(evt, () => endHold());
+});
+
+/* Settings panel */
+const settingsPanel = document.getElementById('settingsPanel');
+const filterPanel = document.getElementById('filterPanel');
+document.getElementById('settingsToggle').addEventListener('click', () => {
+  settingsPanel.classList.toggle('open');
+  filterPanel.classList.remove('open');
+});
+document.getElementById('filterToggle').addEventListener('click', () => {
+  filterPanel.classList.toggle('open');
+  settingsPanel.classList.remove('open');
+});
+
+/* Theme switching */
+const THEME_KEY = 'philmont-checklist-theme';
+const themeButtons = document.querySelectorAll('.theme-btn');
+
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  themeButtons.forEach(b => b.classList.toggle('active', b.dataset.themeChoice === theme));
+}
+
+function saveTheme(theme){
+  try{ localStorage.setItem(THEME_KEY, theme); }catch(e){}
+  if(hasCloudStorage){
+    window.storage.set(THEME_KEY, theme, false).catch(()=>{});
+  }
+}
+
+async function loadTheme(){
+  let theme = 'light';
+  try{
+    const local = localStorage.getItem(THEME_KEY);
+    if(local) theme = local;
+  }catch(e){}
+  if(hasCloudStorage){
+    try{
+      const result = await window.storage.get(THEME_KEY, false);
+      if(result && result.value) theme = result.value;
+    }catch(e){}
+  }
+  applyTheme(theme);
+}
+
+themeButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const theme = btn.dataset.themeChoice;
+    applyTheme(theme);
+    saveTheme(theme);
+  });
+});
+
+/* Custom equipment: personal */
+const CUSTOM_KEY = 'philmont-custom-items-v1';
+const customItemsListEl = document.getElementById('customItemsList');
+
+function buildCustomItem(item, list, listEl){
+  const onRemove = (it, row) => {
+    const idx = list.indexOf(it);
+    if(idx > -1) list.splice(idx, 1);
+    delete state[it._id];
+    row.remove();
+    updateProgress();
+    if(list === personalCustomItems) saveCustomItems(); else saveTroopCustomItems();
+    saveState();
+  };
+  const row = buildItem(item, onRemove);
+  listEl.appendChild(row);
+  list.push(item);
+}
+
+async function saveCustomItems(){
+  const payload = personalCustomItems.map(it => ({_id: it._id, n: it.n, q: it.q, c: it.c}));
+  try{
+    if(hasCloudStorage){
+      await window.storage.set(CUSTOM_KEY, JSON.stringify(payload), false);
+    }else{
+      localStorage.setItem(CUSTOM_KEY, JSON.stringify(payload));
+    }
+  }catch(e){}
+}
+
+async function loadCustomItems(){
+  let raw = null;
+  try{
+    if(hasCloudStorage){
+      const result = await window.storage.get(CUSTOM_KEY, false);
+      raw = result ? result.value : null;
+    }else{
+      raw = localStorage.getItem(CUSTOM_KEY);
+    }
+  }catch(e){}
+  if(raw){
+    try{
+      const saved = JSON.parse(raw);
+      saved.forEach(it => buildCustomItem(it, personalCustomItems, customItemsListEl));
+    }catch(e){}
+  }
+}
+
+document.getElementById('addItemBtn').addEventListener('click', async () => {
+  const nameInput = document.getElementById('newItemName');
+  const qtyInput = document.getElementById('newItemQty');
+  const commentInput = document.getElementById('newItemComment');
+  const name = nameInput.value.trim();
+  if(!name){
+    nameInput.focus();
+    return;
+  }
+  const item = {
+    _id: 'c' + Date.now() + '-' + (customIdCounter++),
+    n: name,
+    q: qtyInput.value.trim(),
+    c: commentInput.value.trim()
+  };
+  buildCustomItem(item, personalCustomItems, customItemsListEl);
+  updateProgress();
+  await saveCustomItems();
+  await saveState();
+  nameInput.value = '';
+  qtyInput.value = '';
+  commentInput.value = '';
+  nameInput.focus();
+});
+
+/* Custom equipment: troop */
+const CUSTOM_KEY_TROOP = 'philmont-custom-items-troop-v1';
+const troopCustomItemsListEl = document.getElementById('troopCustomItemsList');
+
+async function saveTroopCustomItems(){
+  const payload = troopCustomItems.map(it => ({_id: it._id, n: it.n, q: it.q, c: it.c}));
+  try{
+    if(hasCloudStorage){
+      await window.storage.set(CUSTOM_KEY_TROOP, JSON.stringify(payload), false);
+    }else{
+      localStorage.setItem(CUSTOM_KEY_TROOP, JSON.stringify(payload));
+    }
+  }catch(e){}
+}
+
+async function loadTroopCustomItems(){
+  let raw = null;
+  try{
+    if(hasCloudStorage){
+      const result = await window.storage.get(CUSTOM_KEY_TROOP, false);
+      raw = result ? result.value : null;
+    }else{
+      raw = localStorage.getItem(CUSTOM_KEY_TROOP);
+    }
+  }catch(e){}
+  if(raw){
+    try{
+      const saved = JSON.parse(raw);
+      saved.forEach(it => buildCustomItem(it, troopCustomItems, troopCustomItemsListEl));
+    }catch(e){}
+  }
+}
+
+document.getElementById('addTroopItemBtn').addEventListener('click', async () => {
+  const nameInput = document.getElementById('newTroopItemName');
+  const qtyInput = document.getElementById('newTroopItemQty');
+  const commentInput = document.getElementById('newTroopItemComment');
+  const name = nameInput.value.trim();
+  if(!name){
+    nameInput.focus();
+    return;
+  }
+  const item = {
+    _id: 'tc' + Date.now() + '-' + (customIdCounter++),
+    n: name,
+    q: qtyInput.value.trim(),
+    c: commentInput.value.trim()
+  };
+  buildCustomItem(item, troopCustomItems, troopCustomItemsListEl);
+  updateProgress();
+  await saveTroopCustomItems();
+  await saveState();
+  nameInput.value = '';
+  qtyInput.value = '';
+  commentInput.value = '';
+  nameInput.focus();
+});
+
+(async () => {
+  await loadCustomItems();
+  await loadTroopCustomItems();
+  await loadTheme();
+  await loadState();
+})();
+</script>
+</body>
+</html>
